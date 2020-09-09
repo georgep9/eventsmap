@@ -13,11 +13,20 @@ function searchEvents() {
   const latlng = mymap.getCenter();
   const lat = latlng.lat;
   const lng = latlng.lng;
-  const presc = mymap.getZoom();
+  const zoom = mymap.getZoom();
 
   const genre = document.getElementById('genre').value;
   const keywords = document.getElementById('keywords').value;
 
-  console.log('Lat: ' + lat + ' Lng: ' + lng + ' Zoom: ' + presc);
+  console.log('Lat: ' + lat + ' Lng: ' + lng + ' Zoom: ' + zoom);
   console.log(genre + " " + keywords);
+
+  fetch(`/api/${genre}/${lat}/${lng}/${zoom}?&keywords=${keywords}`)
+    .then((res) => res.json())
+    .then((data) => {
+      console.log(data);
+    })
+    .catch((error) => {
+      console.log("Error fetching server-side mashup");
+    })
 }
