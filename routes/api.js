@@ -32,8 +32,14 @@ router.get('/:genre/:lat/:lng/:zoom', function(req, res, next) {
 
     axios.get(url)
         .then((response) => {
-            const events = response.data._embedded.events;
-            res.json(events);
+            try{
+                const events = response.data._embedded.events;
+                const eventsFiltered = filterEvents(events);
+                res.json(eventsFiltered);
+            }
+            catch (error) {
+                res.json({error: 'No events found.'});
+            }
         })
         .catch((error) => {
             console.log(error);
@@ -42,5 +48,27 @@ router.get('/:genre/:lat/:lng/:zoom', function(req, res, next) {
         })
 
 });
+
+function filterEvents(events){
+
+    let filtered = {};
+
+    events.forEach((event) => {
+        const name = event.name;
+        const url = event.url;
+        const lat = event._embedded.venues[0].location.latitude;
+        const lng = event._embedded.venues[0].location.longitude;
+
+        filtered[name] = {
+            name: name,
+            url: url,
+            lat: lat,
+            lng: lng
+        }
+    })
+
+    
+    return filtered;
+}
 
 module.exports = router;
