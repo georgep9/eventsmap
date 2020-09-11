@@ -1,13 +1,43 @@
-var mymap = L.map('mapid').setView([-27.470125, 153.021072], 13);
+var mymap = L.map('mapid', {
+  center: [-27.470125, 153.021072],
+  zoom: 13,
+  worldCopyJump: true
+});
 
 const accessToken = '5zcQsTkqVyvPVcBaiCQThZ88UuyxMzmrsWwt2wNCkGjB5U8Bb3D1ofLIXaT33wGp';
 
 L.tileLayer(
     `https://tile.jawg.io/jawg-sunny/{z}/{x}/{y}.png?access-token=${accessToken}`, {
       attribution: '<a href="http://jawg.io" title="Tiles Courtesy of Jawg Maps" target="_blank" class="jawg-attrib">&copy; <b>Jawg</b>Maps</a> | <a href="https://www.openstreetmap.org/copyright" title="OpenStreetMap is open data licensed under ODbL" target="_blank" class="osm-attrib">&copy; OSM contributors</a>',
-      maxZoom: 16
+      maxZoom: 16,
+      minZoom: 2
     }
   ).addTo(mymap);
+
+  let markersLayer = L.layerGroup().addTo(mymap);
+
+
+
+function addMarkers(events) {
+
+  markersLayer.clearLayers();
+
+  console.log(events);
+
+  events.forEach((event) => {
+    const name = event.name;
+    const url = event.url;
+    const lat = parseFloat(event.lat);
+    const lng = parseFloat(event.lng);
+
+    console.log(name);
+    console.log(url);
+    console.log([lat, lng]);
+
+    L.marker([lat, lng]).addTo(markersLayer);
+  });
+
+}
 
 function searchEvents() {
   const latlng = mymap.getCenter();
@@ -23,8 +53,9 @@ function searchEvents() {
 
   fetch(`/api/${genre}/${lat}/${lng}/${zoom}?&keywords=${keywords}`)
     .then((res) => res.json())
-    .then((data) => {
-      console.log(data);
+    .then((events) => {
+      console.log(events);
+      addMarkers(events);
     })
     .catch((error) => {
       console.log("Error fetching server-side mashup");

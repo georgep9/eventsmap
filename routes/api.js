@@ -3,13 +3,15 @@ const axios = require('axios');
 const Geohash = require('ngeohash');
 var router = express.Router();
 
+
+
 /* GET home page. */
 router.get('/:genre/:lat/:lng/:zoom', function(req, res, next) {
 
-    let url = `https://app.ticketmaster.com/discovery/v2/events.json?`;
+    let url = `https://app.ticketmaster.com/discovery/v2/events.json?&size=60&sort=distance,asc`;
 
-    const lat = parseInt(req.params.lat);
-    const lng = parseInt(req.params.lng);
+    const lat = parseFloat(req.params.lat);
+    const lng = parseFloat(req.params.lng);
     let zoom = parseInt(req.params.zoom);
     if (zoom > 9){ zoom = 9; }
     const geohash = Geohash.encode(lat, lng, zoom);
@@ -29,6 +31,7 @@ router.get('/:genre/:lat/:lng/:zoom', function(req, res, next) {
     url += `&apikey=1GTbZxJ7g6XHGZIENkKhEn4nb55nPixn`;
 
     console.log(url);
+    console.log(lat + " " + lng);
 
     axios.get(url)
         .then((response) => {
@@ -38,6 +41,7 @@ router.get('/:genre/:lat/:lng/:zoom', function(req, res, next) {
                 res.json(eventsFiltered);
             }
             catch (error) {
+                console.log(error);
                 res.json({error: 'No events found.'});
             }
         })
@@ -49,23 +53,32 @@ router.get('/:genre/:lat/:lng/:zoom', function(req, res, next) {
 
 });
 
+// filter events JSON format for client
 function filterEvents(events){
 
-    let filtered = {};
+    let filtered = [];
+
+    let errorCount = 0;
 
     events.forEach((event) => {
-        const name = event.name;
-        const url = event.url;
-        const lat = event._embedded.venues[0].location.latitude;
-        const lng = event._embedded.venues[0].location.longitude;
+        try {
+            const name = event.name;
+            const url = event.url;
 
-        filtered[name] = {
-            name: name,
-            url: url,
-            lat: lat,
-            lng: lng
+
+
+            const lat = event._embedded.venues[0].location.latitude;
+            const lng = event._embedded.venues[0].location.longitude;
+
+            filtered.push({
+                name: name,
+                url: url,
+                lat: lat,
+                lng: lng
+            });
         }
-    })
+        catch (e) { errorCount++; }
+    });
 
     
     return filtered;
