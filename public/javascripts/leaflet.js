@@ -15,7 +15,7 @@ L.tileLayer(
     }
   ).addTo(mymap);
 
-  let markersLayer = L.layerGroup().addTo(mymap);
+let markersLayer = L.markerClusterGroup().addTo(mymap);
 
 
 
@@ -35,7 +35,8 @@ function addMarkers(events) {
     console.log(url);
     console.log([lat, lng]);
 
-    L.marker([lat, lng]).addTo(markersLayer);
+    let marker = L.marker([lat, lng]).addTo(markersLayer);
+    marker.bindPopup(`<b>${name}</b><br><a href="${url}">More information</a>`);
   });
 
 }

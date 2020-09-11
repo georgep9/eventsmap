@@ -8,7 +8,7 @@ var router = express.Router();
 /* GET home page. */
 router.get('/:genre/:lat/:lng/:radius', function(req, res, next) {
 
-    let url = `https://app.ticketmaster.com/discovery/v2/events.json?&size=20&sort=distance,asc`;
+    let url = `https://app.ticketmaster.com/discovery/v2/events.json?&size=20&sort=relevance,desc`;
 
     const radius = Math.round(parseFloat(req.params.radius)/1000); // km
     url += `&radius=${radius}&unit=km`;
