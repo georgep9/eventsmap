@@ -6,15 +6,17 @@ var router = express.Router();
 
 
 /* GET home page. */
-router.get('/:genre/:lat/:lng/:zoom', function(req, res, next) {
+router.get('/:genre/:lat/:lng/:radius', function(req, res, next) {
 
-    let url = `https://app.ticketmaster.com/discovery/v2/events.json?&size=60&sort=distance,asc`;
+    let url = `https://app.ticketmaster.com/discovery/v2/events.json?&size=20&sort=distance,asc`;
+
+    const radius = Math.round(parseFloat(req.params.radius)/1000); // km
+    url += `&radius=${radius}&unit=km`;
 
     const lat = parseFloat(req.params.lat);
     const lng = parseFloat(req.params.lng);
     let zoom = parseInt(req.params.zoom);
-    if (zoom > 9){ zoom = 9; }
-    const geohash = Geohash.encode(lat, lng, zoom);
+    const geohash = Geohash.encode(lat, lng);
 
     url += `&geoPoint=${geohash}`;
 

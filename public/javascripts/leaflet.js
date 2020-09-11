@@ -4,8 +4,9 @@ var mymap = L.map('mapid', {
   worldCopyJump: true
 });
 
-const accessToken = '5zcQsTkqVyvPVcBaiCQThZ88UuyxMzmrsWwt2wNCkGjB5U8Bb3D1ofLIXaT33wGp';
+L.control.scale().addTo(mymap);
 
+const accessToken = '5zcQsTkqVyvPVcBaiCQThZ88UuyxMzmrsWwt2wNCkGjB5U8Bb3D1ofLIXaT33wGp';
 L.tileLayer(
     `https://tile.jawg.io/jawg-sunny/{z}/{x}/{y}.png?access-token=${accessToken}`, {
       attribution: '<a href="http://jawg.io" title="Tiles Courtesy of Jawg Maps" target="_blank" class="jawg-attrib">&copy; <b>Jawg</b>Maps</a> | <a href="https://www.openstreetmap.org/copyright" title="OpenStreetMap is open data licensed under ODbL" target="_blank" class="osm-attrib">&copy; OSM contributors</a>',
@@ -40,18 +41,23 @@ function addMarkers(events) {
 }
 
 function searchEvents() {
+
   const latlng = mymap.getCenter();
   const lat = latlng.lat;
   const lng = latlng.lng;
-  const zoom = mymap.getZoom();
+
+  const bounds = mymap.getBounds();
+  const northWest = bounds.getNorthWest();
+  const southEast = bounds.getSouthEast();
+  const viewRadius = northWest.distanceTo(southEast);
 
   const genre = document.getElementById('genre').value;
   const keywords = document.getElementById('keywords').value;
 
-  console.log('Lat: ' + lat + ' Lng: ' + lng + ' Zoom: ' + zoom);
+  console.log('Lat: ' + lat + ' Lng: ' + lng + ' Radius (corner to corner): ' + viewRadius);
   console.log(genre + " " + keywords);
 
-  fetch(`/api/${genre}/${lat}/${lng}/${zoom}?&keywords=${keywords}`)
+  fetch(`/api/${genre}/${lat}/${lng}/${viewRadius}?&keywords=${keywords}`)
     .then((res) => res.json())
     .then((events) => {
       console.log(events);
