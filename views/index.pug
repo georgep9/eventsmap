@@ -1,6 +1,27 @@
 extends layout
 
 block content
+  h1="Events Map"
+  h4="Search for concerts, venues, festivals, sporting matches, and more on our interactive map!"
+
   div#mapid
+  
+    
+    div(class="form-group")
+      label='Type'
+      select(class="form-control" id="genre")
+        option(selected) All
+        option Music
+        option Sports
+        option Arts
+        option Family
+        option Comedy
+        option Theatre
+    |
+    div(class="form-group")
+      label='Keywords'
+      input(type="text", class="form-control", id="keywords")
+    |
+    button(type="button", class="btn btn-primary", onclick="searchEvents()") Search
 
   script(src='/javascripts/leaflet.js')

@@ -10,7 +10,7 @@ const accessToken = '5zcQsTkqVyvPVcBaiCQThZ88UuyxMzmrsWwt2wNCkGjB5U8Bb3D1ofLIXaT
 L.tileLayer(
     `https://tile.jawg.io/jawg-sunny/{z}/{x}/{y}.png?access-token=${accessToken}`, {
       attribution: '<a href="http://jawg.io" title="Tiles Courtesy of Jawg Maps" target="_blank" class="jawg-attrib">&copy; <b>Jawg</b>Maps</a> | <a href="https://www.openstreetmap.org/copyright" title="OpenStreetMap is open data licensed under ODbL" target="_blank" class="osm-attrib">&copy; OSM contributors</a>',
-      maxZoom: 16,
+      maxZoom: 18,
       minZoom: 2
     }
   ).addTo(mymap);
@@ -28,6 +28,7 @@ function addMarkers(events) {
   events.forEach((event) => {
     const name = event.name;
     const url = event.url;
+    const img = event.img;
     const lat = parseFloat(event.lat);
     const lng = parseFloat(event.lng);
 
@@ -36,7 +37,9 @@ function addMarkers(events) {
     console.log([lat, lng]);
 
     let marker = L.marker([lat, lng]).addTo(markersLayer);
-    marker.bindPopup(`<b>${name}</b><br><a href="${url}">More information</a>`);
+    marker.bindPopup(`<b>${name}</b><br>\
+      <img src="${img}" alt="${name}" width="200"><br> \ 
+      <a href="${url}">More information</a>`);
   });
 
 }
@@ -48,9 +51,9 @@ function searchEvents() {
   const lng = latlng.lng;
 
   const bounds = mymap.getBounds();
-  const northWest = bounds.getNorthWest();
-  const southEast = bounds.getSouthEast();
-  const viewRadius = northWest.distanceTo(southEast);
+  const north = L.latLng(bounds.getNorth(), lng);
+  const south = L.latLng(bounds.getSouth(), lng);
+  const viewRadius = north.distanceTo(south);
 
   const genre = document.getElementById('genre').value;
   const keywords = document.getElementById('keywords').value;
