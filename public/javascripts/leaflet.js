@@ -17,6 +17,11 @@ L.tileLayer(
 
 let markersLayer = L.markerClusterGroup().addTo(mymap);
 
+var myIcon = L.icon({
+  iconUrl: '../img/icon.png',
+  iconSize: [38, 38],
+});
+
 
 
 function addMarkers(events) {
@@ -36,7 +41,7 @@ function addMarkers(events) {
     console.log(url);
     console.log([lat, lng]);
 
-    let marker = L.marker([lat, lng]).addTo(markersLayer);
+    let marker = L.marker([lat, lng], {icon: myIcon}).addTo(markersLayer);
     marker.bindPopup(`<b>${name}</b><br>\
       <img src="${img}" alt="${name}" width="200"><br> \ 
       <a href="${url}">More information</a>`);
