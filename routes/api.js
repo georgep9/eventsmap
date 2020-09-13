@@ -67,6 +67,7 @@ function filterEvents(events){
             const name = event.name;
             const url = event.url;
             const img = event.images[0].url;
+            const date = event.dates.start.localDate;
 
 
             const lat = event._embedded.venues[0].location.latitude;
@@ -76,6 +77,7 @@ function filterEvents(events){
                 name: name,
                 url: url,
                 img: img,
+                date: date,
                 lat: lat,
                 lng: lng
             });

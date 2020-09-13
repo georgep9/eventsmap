@@ -34,6 +34,7 @@ function addMarkers(events) {
     const name = event.name;
     const url = event.url;
     const img = event.img;
+    const date = event.date;
     const lat = parseFloat(event.lat);
     const lng = parseFloat(event.lng);
 
@@ -44,6 +45,7 @@ function addMarkers(events) {
     let marker = L.marker([lat, lng], {icon: myIcon}).addTo(markersLayer);
     marker.bindPopup(`<b>${name}</b><br>\
       <img src="${img}" alt="${name}" width="200"><br> \ 
+      <b>Date: </b>${date}<br> \
       <a href="${url}">More information</a>`);
   });
 
