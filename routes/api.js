@@ -1,30 +1,56 @@
 var express = require('express');
 const axios = require('axios');
 const Geohash = require('ngeohash');
+const date = require('date-and-time');
 var router = express.Router();
 
 
 
 /* GET home page. */
-router.get('/:genre/:lat/:lng/:radius', function(req, res, next) {
+router.get('/:category/:when/:lat/:lng/:radius', function(req, res, next) {
 
     let url = `https://app.ticketmaster.com/discovery/v2/events.json?&size=20&sort=relevance,desc`;
+
+    const category = req.params.category;
+    if (category !== "All"){
+        url += `&classificationName=${category}`;
+    }
+
+    const now = new Date();
+    const when = req.params.when;
+    switch(when) {
+        case 'Today':
+            const today = date.format(now, 'YYYY-MM-DDTHH:mm:ss') + 'Z';
+            url += `&endDateTime=${today}`;
+            break;
+        case 'This week':
+            const thisWeek = date.format(date.addDays(now, 7), 'YYYY-MM-DDTHH:mm:ss') + 'Z';
+            
+            url += `&endDateTime=${thisWeek}`;
+            break;
+        case 'This month':
+            const thisMonth = date.format(date.addMonths(now, 1), 'YYYY-MM-DDTHH:mm:ss') + 'Z';
+            url += `&endDateTime=${thisMonth}`;
+            break;
+        case 'This year':
+            const thisYear = date.format(date.addYears(now, 1), 'YYYY-MM-DDTHH:mm:ss') + 'Z';
+            url += `&endDateTime=${thisYear}`;
+            break;
+        default:
+            break;
+    }
+
 
     const radius = Math.round(parseFloat(req.params.radius)/1000); // km
     url += `&radius=${radius}&unit=km`;
 
     const lat = parseFloat(req.params.lat);
     const lng = parseFloat(req.params.lng);
-    let zoom = parseInt(req.params.zoom);
     const geohash = Geohash.encode(lat, lng);
 
     url += `&geoPoint=${geohash}`;
 
-    const genre = req.params.genre;
-    if (genre !== "All"){
-        url += `&classificationName=${genre}`;
-    }
-
+    
     const keywords = req.query.keywords;
     if (keywords !== ""){
         url += `&keyword=${keywords}`;
@@ -48,7 +74,7 @@ router.get('/:genre/:lat/:lng/:radius', function(req, res, next) {
             }
         })
         .catch((error) => {
-            console.log(error);
+            console.log(url);
             res.json({ error: 'Error requesting Tickmaster API'});
             
         })

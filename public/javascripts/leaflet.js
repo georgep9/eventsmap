@@ -62,13 +62,14 @@ function searchEvents() {
   const south = L.latLng(bounds.getSouth(), lng);
   const viewRadius = north.distanceTo(south);
 
-  const genre = document.getElementById('genre').value;
+  const category = document.getElementById('category').value;
+  const when = document.getElementById('when').value;
   const keywords = document.getElementById('keywords').value;
 
   console.log('Lat: ' + lat + ' Lng: ' + lng + ' Radius (corner to corner): ' + viewRadius);
-  console.log(genre + " " + keywords);
+  console.log(category + " " + when + " " + keywords);
 
-  fetch(`/api/${genre}/${lat}/${lng}/${viewRadius}?&keywords=${keywords}`)
+  fetch(`/api/${category}/${when}/${lat}/${lng}/${viewRadius}?&keywords=${keywords}`)
     .then((res) => res.json())
     .then((events) => {
       console.log(events);

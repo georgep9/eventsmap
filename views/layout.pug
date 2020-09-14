@@ -28,12 +28,16 @@ html
 
   body
 
-    h1="Events Map"
-    h4="Search for concerts, venues, festivals, sporting matches, and more on our interactive map!"
-
+    div(style="height: 100px")
+      p(style="float: left; padding-right: 20px")  
+        img(src='img/earth.png', style="height: 80px;")
+      |
+      h1="Events Map"
+      h4="Search for concerts, venues, festivals, sporting matches, and more on our interactive map!"
+    |
     div(class="form-group")
-      label='Type'
-      select(class="form-control" id="genre")
+      label='Category:'
+      select(class="form-control" id="category")
         option(selected) All
         option Music
         option Sports
@@ -43,10 +47,19 @@ html
         option Theatre
     |
     div(class="form-group")
-      label='Keywords'
+      label='When:'
+      select(class="form-control" id="when")
+        option(selected) All time
+        option Today
+        option This week
+        option This month
+        option This year
+    |
+    div(class="form-group")
+      label='Keywords:'
       input(type="text", class="form-control", id="keywords")
     |
-    button(type="button", class="btn btn-success", onclick="searchEvents()") Search
+    button(style="margin-bottom: 20px", type="button", class="btn btn-success", onclick="searchEvents()") Search
   
 
 
