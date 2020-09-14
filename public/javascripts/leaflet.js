@@ -10,7 +10,7 @@ const accessToken = '5zcQsTkqVyvPVcBaiCQThZ88UuyxMzmrsWwt2wNCkGjB5U8Bb3D1ofLIXaT
 L.tileLayer(
     `https://tile.jawg.io/jawg-sunny/{z}/{x}/{y}.png?access-token=${accessToken}`, {
       attribution: '<a href="http://jawg.io" title="Tiles Courtesy of Jawg Maps" target="_blank" class="jawg-attrib">&copy; <b>Jawg</b>Maps</a> | <a href="https://www.openstreetmap.org/copyright" title="OpenStreetMap is open data licensed under ODbL" target="_blank" class="osm-attrib">&copy; OSM contributors</a>',
-      maxZoom: 18,
+      maxZoom: 17,
       minZoom: 2
     }
   ).addTo(mymap);
@@ -23,10 +23,18 @@ var myIcon = L.icon({
 });
 
 
-
 function addMarkers(events) {
 
   markersLayer.clearLayers();
+
+  const messageDiv = document.getElementById('message');
+
+  if (events.error) {
+    messageDiv.innerHTML = `<p style="color:red">${events.error}</p>`;
+    return;
+  } else {
+    messageDiv.innerHTML = `<p style="color:green">${events.length} events found!</p>`;    
+  }
 
   console.log(events);
 
@@ -51,7 +59,7 @@ function addMarkers(events) {
 
 }
 
-function searchEvents() {
+function fetchEvents() {
 
   const latlng = mymap.getCenter();
   const lat = latlng.lat;
@@ -73,7 +81,10 @@ function searchEvents() {
     .then((res) => res.json())
     .then((events) => {
       console.log(events);
+
       addMarkers(events);
+
+      
     })
     .catch((error) => {
       console.log("Error fetching server-side mashup");
