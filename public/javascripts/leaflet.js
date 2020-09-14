@@ -22,6 +22,9 @@ var myIcon = L.icon({
   iconSize: [38, 38],
 });
 
+function centerOnMarker(e) {
+  mymap.setView(e.target.getLatLng(),mymap.getZoom());
+}
 
 function addMarkers(events) {
 
@@ -54,8 +57,10 @@ function addMarkers(events) {
     marker.bindPopup(`<b>${name}</b><br>\
       <img src="${img}" alt="${name}" width="200"><br> \ 
       <b>Date: </b>${date}<br> \
-      <a href="${url}">More information</a>`);
+      <a href="${url}">More information</a>`).on('click', centerOnMarker);;
   });
+
+  window.scrollTo(0,document.body.scrollHeight);
 
 }
 

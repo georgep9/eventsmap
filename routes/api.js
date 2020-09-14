@@ -9,7 +9,7 @@ var router = express.Router();
 /* GET home page. */
 router.get('/:category/:when/:lat/:lng/:radius', function(req, res, next) {
 
-    let url = `https://app.ticketmaster.com/discovery/v2/events.json?&size=20&sort=relevance,desc`;
+    let url = `https://app.ticketmaster.com/discovery/v2/events.json?&size=40&sort=relevance,desc`;
 
     const category = req.params.category;
     if (category !== "All"){
