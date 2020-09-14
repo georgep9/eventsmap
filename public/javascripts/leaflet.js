@@ -1,11 +1,12 @@
+
+// initialize leaflet map
 var mymap = L.map('mapid', {
   center: [-27.470125, 153.021072],
   zoom: 13,
   worldCopyJump: true
 });
 
-L.control.scale().addTo(mymap);
-
+// create map using tiles using Jawgs.io API
 const accessToken = '5zcQsTkqVyvPVcBaiCQThZ88UuyxMzmrsWwt2wNCkGjB5U8Bb3D1ofLIXaT33wGp';
 L.tileLayer(
     `https://tile.jawg.io/jawg-sunny/{z}/{x}/{y}.png?access-token=${accessToken}`, {
@@ -15,33 +16,35 @@ L.tileLayer(
     }
   ).addTo(mymap);
 
-let markersLayer = L.markerClusterGroup().addTo(mymap);
+let markersLayer = L.markerClusterGroup().addTo(mymap); // marker cluster interaction
 
+// replace default marker icon with custom made
 var myIcon = L.icon({
-  iconUrl: '../img/icon.png',
-  iconSize: [38, 38],
+  iconUrl: '../images/icon.png',
+  iconSize: [40, 40],
 });
 
-function centerOnMarker(e) {
-  mymap.setView(e.target.getLatLng(),mymap.getZoom());
-}
+// re center map view on clicked marker
+function centerOnMarker(e) { mymap.setView(e.target.getLatLng(),mymap.getZoom()); }
 
-function addMarkers(events) {
+/* add markers onto map */
+function updateMap(events) {
 
-  markersLayer.clearLayers();
+  markersLayer.clearLayers(); // clear current markers
 
+  // write status message above map
   const messageDiv = document.getElementById('message');
-
-  if (events.error) {
+  if (events.error) { // error messages
     messageDiv.innerHTML = `<p style="color:red">${events.error}</p>`;
     return;
   } else {
     messageDiv.innerHTML = `<p style="color:green">${events.length} events found!</p>`;    
   }
 
-  console.log(events);
-
+  // create marker for each event from events
   events.forEach((event) => {
+
+    // event information
     const name = event.name;
     const url = event.url;
     const img = event.img;
@@ -49,49 +52,52 @@ function addMarkers(events) {
     const lat = parseFloat(event.lat);
     const lng = parseFloat(event.lng);
 
-    console.log(name);
-    console.log(url);
-    console.log([lat, lng]);
-
+    // add marker to map
     let marker = L.marker([lat, lng], {icon: myIcon}).addTo(markersLayer);
     marker.bindPopup(`<b>${name}</b><br>\
       <img src="${img}" alt="${name}" width="200"><br> \ 
       <b>Date: </b>${date}<br> \
-      <a href="${url}">More information</a>`).on('click', centerOnMarker);;
+      <a href="${url}">More information</a>`).on('click', centerOnMarker);
+
   });
 
-  window.scrollTo(0,document.body.scrollHeight);
+  window.scrollTo(0,document.body.scrollHeight); // scroll to map div (bottom of page)
 
 }
 
+/* request events from the API endpoint */
 function fetchEvents() {
 
+  // latitude and longitude of map center
   const latlng = mymap.getCenter();
   const lat = latlng.lat;
   const lng = latlng.lng;
 
+  // radius of current view (top to bottom)
   const bounds = mymap.getBounds();
   const north = L.latLng(bounds.getNorth(), lng);
   const south = L.latLng(bounds.getSouth(), lng);
   const viewRadius = north.distanceTo(south);
 
+  // user form inputs
   const category = document.getElementById('category').value;
   const when = document.getElementById('when').value;
   const keywords = document.getElementById('keywords').value;
 
-  console.log('Lat: ' + lat + ' Lng: ' + lng + ' Radius (corner to corner): ' + viewRadius);
-  console.log(category + " " + when + " " + keywords);
+  // API request string
+  const api = `/api/${category}/${when}/${lat}/${lng}/${viewRadius}?&keywords=${keywords}`;
+  console.log(api);
 
-  fetch(`/api/${category}/${when}/${lat}/${lng}/${viewRadius}?&keywords=${keywords}`)
+  // fetch events from API endpoint
+  fetch(api)
     .then((res) => res.json())
     .then((events) => {
       console.log(events);
-
-      addMarkers(events);
-
-      
+      updateMap(events); // update map with events
     })
-    .catch((error) => {
+    .catch((error) => { // server error
       console.log("Error fetching server-side mashup");
+      const messageDiv = document.getElementById('message');
+      messageDiv.innerHTML = '<p style="color:red">Internal Server Error</p>';
     })
 }

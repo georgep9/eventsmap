@@ -2,6 +2,40 @@ extends layout
 
 block content
 
+  div(style="height: 100px")
+      p(style="float: left; padding-right: 20px")  
+        img(src='images/earth.png', style="height: 80px;")
+      |
+      h1="Events Map"
+      h4="Search for concerts, venues, festivals, sporting matches, and more on our interactive map!"
+  |
+  div(class="form-group")
+    label='Category:'
+    select(class="form-control" id="category")
+      option(selected) All
+      option Music
+      option Sports
+      option Arts
+      option Family
+      option Comedy
+      option Theatre
+  |
+  div(class="form-group")
+    label='When:'
+    select(class="form-control" id="when")
+      option(selected) All time
+      option Today
+      option This week
+      option This month
+      option This year
+  |
+  div(class="form-group")
+    label='Keywords:'
+    input(type="text", class="form-control", id="keywords")
+  |
+  button(style="margin-bottom: 20px", type="button", class="btn btn-success", onclick="fetchEvents()") Search
+
+  |
   div(id="message")
 
   div#mapid
