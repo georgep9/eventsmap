@@ -70,15 +70,22 @@ router.get('/:category/:when/:lat/:lng/:radius', function(req, res, next) {
                 // filter JSON then return response
                 const events = response.data._embedded.events;
                 const eventsFiltered = filterEvents(events);
-                res.json(eventsFiltered);
+                if (eventsFiltered.length > 0){
+                    res.json(eventsFiltered);
+                } else {
+                    res.json({error: 'No events found.'});
+                }
+                
             }
             catch (error) { // no events; return error
+                console.log(error);
                 console.log('No events found.');
                 console.log(url);
                 res.json({error: 'No events found.'});
             }
         })
         .catch((error) => { // failed to fetch Ticketmaster API
+            
             console.log('Error requesting Tickmaster API');
             console.log(url);
             res.json({ error: 'Error requesting Tickmaster API'});
@@ -91,31 +98,38 @@ function filterEvents(events){
 
     let filtered = [];
 
+    let errorCount = 0;
+
     // save name, url, img, date, latitude, longitude for each event
     events.forEach((event) => {
-        const name = event.name;
-        const url = event.url;
-        const img = event.images[0].url;
-        const venue = event._embedded.venues[0].name;
-        const city = event._embedded.venues[0].city.name;
-        const state = event._embedded.venues[0].state.name;
-        const date = event.dates.start.localDate;
-        const lat = event._embedded.venues[0].location.latitude;
-        const lng = event._embedded.venues[0].location.longitude;
-
-        filtered.push({
-            name: name,
-            url: url,
-            img: img,
-            venue: venue,
-            city: city,
-            state: state,
-            date: date,
-            lat: lat,
-            lng: lng
-        });
+        try {
+            const name = event.name;
+            const url = event.url;
+            const img = event.images[0].url;
+            const venue = event._embedded.venues[0].name;
+            const city = event._embedded.venues[0].city.name;
+            const state = event._embedded.venues[0].state.name;
+            const date = event.dates.start.localDate;
+            const lat = event._embedded.venues[0].location.latitude;
+            const lng = event._embedded.venues[0].location.longitude;
+    
+            filtered.push({
+                name: name,
+                url: url,
+                img: img,
+                venue: venue,
+                city: city,
+                state: state,
+                date: date,
+                lat: lat,
+                lng: lng
+            });
+        } catch (e) { errorCount++; }
+        
     });
     
+    console.log("No. of events that failed to be filtered: " + errorCount);
+
     return filtered;
 }
 
