@@ -96,6 +96,9 @@ function filterEvents(events){
         const name = event.name;
         const url = event.url;
         const img = event.images[0].url;
+        const venue = event._embedded.venues[0].name;
+        const city = event._embedded.venues[0].city.name;
+        const state = event._embedded.venues[0].state.name;
         const date = event.dates.start.localDate;
         const lat = event._embedded.venues[0].location.latitude;
         const lng = event._embedded.venues[0].location.longitude;
@@ -104,6 +107,9 @@ function filterEvents(events){
             name: name,
             url: url,
             img: img,
+            venue: venue,
+            city: city,
+            state: state,
             date: date,
             lat: lat,
             lng: lng

@@ -48,6 +48,9 @@ function updateMap(events) {
     const name = event.name;
     const url = event.url;
     const img = event.img;
+    const venue = event.venue;
+    const city = event.city;
+    const state = event.state;
     const date = event.date;
     const lat = parseFloat(event.lat);
     const lng = parseFloat(event.lng);
@@ -56,6 +59,9 @@ function updateMap(events) {
     let marker = L.marker([lat, lng], {icon: myIcon}).addTo(markersLayer);
     marker.bindPopup(`<b>${name}</b><br>\
       <img src="${img}" alt="${name}" width="200"><br> \ 
+      <b>Venue:</b><br> \
+      ${venue}<br> \
+      ${city}, ${state}<br> \
       <b>Date: </b>${date}<br> \
       <a href="${url}">More information</a>`).on('click', centerOnMarker);
 
