@@ -8,6 +8,7 @@ var indexRouter = require('./routes/index');
 const apiRouter = require('./routes/api');
 
 var app = express();
+require('dotenv').config();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
