@@ -3,6 +3,7 @@ const axios = require('axios');
 const Geohash = require('ngeohash');
 const date = require('date-and-time');
 var router = express.Router();
+require('dotenv').config();
 
 /* API endpoint for requesting events */
 router.get('/:category/:when/:lat/:lng/:radius', function(req, res, next) {
@@ -60,7 +61,7 @@ router.get('/:category/:when/:lat/:lng/:radius', function(req, res, next) {
     }
 
     // add API key to url
-    url += `&apikey=1GTbZxJ7g6XHGZIENkKhEn4nb55nPixn`;
+    url += "&apikey=" + process.env.TM_KEY;
 
     // do API request
     axios.get(url)
