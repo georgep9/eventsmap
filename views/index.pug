@@ -2,15 +2,14 @@ extends layout
 
 block content
 
-  div(style="height: 100px")
+  div(style="max-width: 72rem;")
       p(style="float: left; padding-right: 20px")  
         img(src='images/earth.png', style="height: 80px;")
       |
       h1="Events Map"
       h4="Search for concerts, venues, festivals, sporting matches, and more on our interactive map!"
   |
-  div(class="form-group")
-    label='Category:'
+  div(class="form-group", style="max-width: 32rem;")
     select(class="form-control" id="category")
       option(selected) All
       option Music
@@ -20,8 +19,7 @@ block content
       option Comedy
       option Theatre
   |
-  div(class="form-group")
-    label='When:'
+  div(class="form-group", style="max-width: 32rem;")
     select(class="form-control" id="when")
       option(selected) All time
       option Today
@@ -29,15 +27,15 @@ block content
       option This month
       option This year
   |
-  div(class="form-group")
+  div(class="form-group", style="max-width: 32rem;")
     label='Keywords:'
     input(type="text", class="form-control", id="keywords")
   |
   button(style="margin-bottom: 20px", type="button", class="btn btn-success", onclick="fetchEvents()") Search
 
   |
-  div(id="message")
 
-  div#mapid
+  div(id="mapid", style="height: 100%; max-width: 72rem;")
+  div(id="message", style="max-width: 72rem;")
 
   script(src='/javascripts/leaflet.js')

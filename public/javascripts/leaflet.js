@@ -2,17 +2,17 @@
 // initialize leaflet map
 var mymap = L.map('mapid', {
   center: [-27.470125, 153.021072],
-  zoom: 13,
+  zoom: 14,
   worldCopyJump: true
 });
 
 // create map using tiles using Jawgs.io API
-const accessToken = process.env.JAWGS_KEY;
+// const accessToken = process.env.JAWGS_KEY;
 L.tileLayer(
-    `https://tile.jawg.io/jawg-sunny/{z}/{x}/{y}.png?access-token=${accessToken}`, {
+    `https://tile.jawg.io/jawg-sunny/{z}/{x}/{y}.png?access-token=5zcQsTkqVyvPVcBaiCQThZ88UuyxMzmrsWwt2wNCkGjB5U8Bb3D1ofLIXaT33wGp`, {
       attribution: '<a href="http://jawg.io" title="Tiles Courtesy of Jawg Maps" target="_blank" class="jawg-attrib">&copy; <b>Jawg</b>Maps</a> | <a href="https://www.openstreetmap.org/copyright" title="OpenStreetMap is open data licensed under ODbL" target="_blank" class="osm-attrib">&copy; OSM contributors</a>',
-      maxZoom: 17,
-      minZoom: 2
+      maxZoom: 18,
+      minZoom: 10
     }
   ).addTo(mymap);
 
@@ -21,7 +21,7 @@ let markersLayer = L.markerClusterGroup().addTo(mymap); // marker cluster intera
 // replace default marker icon with custom made
 var myIcon = L.icon({
   iconUrl: '../images/icon.png',
-  iconSize: [40, 40],
+  iconSize: [50, 50],
 });
 
 // re center map view on clicked marker
@@ -38,7 +38,8 @@ function updateMap(events) {
     messageDiv.innerHTML = `<p style="color:red">${events.error}</p>`;
     return;
   } else {
-    messageDiv.innerHTML = `<p style="color:green">${events.length} events found!</p>`;    
+    messageDiv.innerHTML = `
+      <p style="color:green">${events.length} events found!</p>`;
   }
 
   // create marker for each event from events
@@ -65,6 +66,7 @@ function updateMap(events) {
       <b>Date: </b>${date}<br> \
       <a href="${url}">More information</a>`).on('click', centerOnMarker);
 
+      messageDiv.innerHTML = `${messageDiv.innerHTML}&emsp;<a href=" ${url}">${name} ${event.date}</a>`
   });
 
   window.scrollTo(0,document.body.scrollHeight); // scroll to map div (bottom of page)
