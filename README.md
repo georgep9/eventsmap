@@ -9,10 +9,6 @@ University project to demonstrate a server-side API mashup. Combines services Le
 
 Due to network limitations and bugs with the Tickmaster API, a maximum of 40 events are searched for, and may result in zero or duplicate events if searching over a large area (eg. continents).
 
-#### TODO
-
-Remove API keys from source and improve frontend design.
-
 ## Run
 
 Either run using NodeJS or Docker.
