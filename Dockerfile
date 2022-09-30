@@ -14,5 +14,3 @@ RUN npm install
 
 # start command as per package.json
 CMD ["npm", "start"]
-
-
